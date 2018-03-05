@@ -1,15 +1,22 @@
 const express = require("express");
 const app = express();
 const db = require("./db.js");
+const bodyParser = require("body-parser");
+const config = require("./config");
 
 const getImages = db.getImages;
 
 app.use(express.static("./public"));
 
-// app.get("/", (req, res) => {
-//     console.log("we are here");
-// });
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.listen(process.env.PORT || 8080, function() {
+app.get("/images", (req, res) => {
+    getImages().then(images => {
+        console.log("Results from get images", images);
+        res.json({ images: images });
+    });
+});
+
+app.listen(8080, function() {
     console.log("Listening Image Board");
 });

@@ -1,4 +1,5 @@
-var spicedPg = require("spiced-pg");
+const spicedPg = require("spiced-pg");
+const config = require("./config");
 
 // var { dbUser, dbPass } = require("../secrets.json");
 
@@ -13,7 +14,13 @@ function getImages() {
     return db
         .query(q)
         .then(results => {
-            return results;
+            console.log(results.rows);
+            let images = results.rows;
+            images.forEach(function(image) {
+                let url = config.s3Url + image.image;
+                image.image = url;
+            });
+            return images;
         })
         .catch(err => console.log(err));
 }

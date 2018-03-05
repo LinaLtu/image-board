@@ -1,14 +1,16 @@
 * {
     background-color: #f6f6f6;
+    font-family: "Cinzel", serif;
 }
 
-.main {
+#main {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
+    margin: 2%;
 }
 
 .logo-img img {
-    width: 150px;
+    width: 100px;
 }
 
 .logo-img {
@@ -16,11 +18,31 @@
 }
 
 .title {
-    margin: 1%;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .heading {
     margin: 1%;
     font-size: 25px;
 }
+
+.image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-item {
+    margin: 1%;
+    border: 2px solid black;
+    max-width: 400px;
+    max-height: 350px;
+    border-radius: 5px;
+    position: relative;
+}
+/*
+.img-title {
+    position: absolute;
+    bottom: 1%;
+    left: 10%;
+} */

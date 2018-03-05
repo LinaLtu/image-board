@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
 <head>
-    <title></title>
+    <title>CactusImages</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel" rel="stylesheet">
 </head>
 <body>
 
@@ -10,8 +11,12 @@
          <div class="logo-img"><img src="logo.jpg"></div>
          <div class="title">CactusImages</div>
     </div>
+    <h1>Lastest Images</h1>
     <div id="main">
-        <h1>{{ heading }}</h1>
+        <div v-for="image in images" class="image-item">
+            <img v-bind:src="image.image">
+            <span class="img-title">{{image.title}}</span>
+        </div>
     </div>
 
 
