@@ -1,0 +1,26 @@
+* {
+    background-color: #f6f6f6;
+}
+
+.main {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.logo-img img {
+    width: 150px;
+}
+
+.logo-img {
+    display: inline-block;
+}
+
+.title {
+    margin: 1%;
+    font-size: 20px;
+}
+
+.heading {
+    margin: 1%;
+    font-size: 25px;
+}
