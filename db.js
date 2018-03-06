@@ -32,8 +32,12 @@ function insertImageIntoDB(image, username, title, description) {
     return db
         .query(q, params)
         .then(results => {
-            console.log("Insert new signature was successful");
-            return results;
+            let images = results.rows;
+            images.forEach(function(image) {
+                let url = config.s3Url + image.image;
+                image.image = url;
+            });
+            return images[0];
         })
         .catch(err => console.log(err));
 }

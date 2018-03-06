@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
 const db = require("./db.js");
+const s3 = require("./s3.js");
 const bodyParser = require("body-parser");
 const config = require("./config");
 
 const getImages = db.getImages;
 const insertImageIntoDB = db.insertImageIntoDB;
+const upload = s3.upload;
 
 var multer = require("multer");
 var uidSafe = require("uid-safe");
@@ -33,7 +35,7 @@ app.use(express.static("./public"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post("/upload", uploader.single("file"), function(req, res) {
+app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
     // console.log("Inside Post /upload");
     // If nothing went wrong the file is already in the uploads directory
     if (req.file) {
@@ -43,14 +45,14 @@ app.post("/upload", uploader.single("file"), function(req, res) {
             req.body.title,
             req.body.description
         ).then(results => {
-            // console.log("Upload Successful", results.rows[0]);
+            console.log("Upload Successful", results);
             res.json({
-                id: results.rows[0].id,
-                title: results.rows[0].title,
-                description: results.rows[0].description,
-                username: results.rows[0].username,
-                timestamp: results.rows[0].created_at,
-                image: results.rows[0].image
+                id: results.id,
+                title: results.title,
+                description: results.description,
+                username: results.username,
+                timestamp: results.created_at,
+                image: results.image
             });
         });
 

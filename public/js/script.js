@@ -23,15 +23,16 @@ new Vue({
             formData.append("file", this.formInfo.file);
 
             axios.post("/upload", formData).then(results => {
+                console.log("Results from Axios", results);
                 this.formInfo.title = "";
                 this.formInfo.description = "";
                 this.formInfo.username = "";
                 this.formInfo.file = "";
 
                 // console.log(results.data.image);
-                this.images.unshift(results.data.image);
+                this.images.unshift(results.data);
 
-                console.log(this.images);
+                console.log("Images:", this.images);
                 // images.unshift(results.data.file);
 
                 // res

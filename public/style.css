@@ -17,9 +17,17 @@
     margin-bottom: 2%;
 }
 
-.h1 {
-    margin: 0;
+h1 {
+    margin-left: 3%;
     padding: 0;
+}
+
+form {
+    margin-left: 1%;
+}
+
+.header-top {
+    margin-left: 3%;
 }
 
 .logo-img img {
