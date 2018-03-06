@@ -11,11 +11,21 @@
          <div class="logo-img"><img src="logo.jpg"></div>
          <div class="title">CactusImages</div>
     </div>
-    <h1>Lastest Images</h1>
+    <h1>Most Recent Images</h1>
     <div id="main">
-        <div v-for="image in images" class="image-item">
-            <img v-bind:src="image.image">
-            <span class="img-title">{{image.title}}</span>
+        <form class="upload-form">
+                <input v-model="formInfo.title" name="title" placeholder="Title" type="text">
+                <input v-model="formInfo.description" name="description" placeholder="Description"type="text">
+                <input v-model="formInfo.username" name="username" placeholder="Username" type="text">
+                <input type="file" v-on:change="handleChange">
+                <button v-on:click="handleSubmit">Submit</button>
+        </form>
+
+        <div class="image-board">
+            <div v-for="image in images" class="image-item">
+                <img v-bind:src="image.image">
+                <span class="img-title">{{image.title}}</span>
+            </div>
         </div>
     </div>
 

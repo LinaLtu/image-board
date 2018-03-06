@@ -25,4 +25,18 @@ function getImages() {
         .catch(err => console.log(err));
 }
 
+function insertImageIntoDB(image, username, title, description) {
+    const q = `INSERT INTO images (image, username, title, description) VALUES ($1, $2, $3, $4) RETURNING *`;
+    const params = [image, username, title, description];
+
+    return db
+        .query(q, params)
+        .then(results => {
+            console.log("Insert new signature was successful");
+            return results;
+        })
+        .catch(err => console.log(err));
+}
+
 module.exports.getImages = getImages;
+module.exports.insertImageIntoDB = insertImageIntoDB;

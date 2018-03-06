@@ -4,9 +4,22 @@
 }
 
 #main {
+    margin: 2%;
+}
+
+.image-board {
     display: flex;
     flex-direction: row;
-    margin: 2%;
+    flex-wrap: wrap;
+}
+
+.upload-form {
+    margin-bottom: 2%;
+}
+
+.h1 {
+    margin: 0;
+    padding: 0;
 }
 
 .logo-img img {
