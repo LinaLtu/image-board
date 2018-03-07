@@ -7,6 +7,8 @@ const config = require("./config");
 
 const getImages = db.getImages;
 const insertImageIntoDB = db.insertImageIntoDB;
+const getImageById = db.getImageById;
+const insertComment = db.insertComment;
 const upload = s3.upload;
 
 var multer = require("multer");
@@ -35,6 +37,8 @@ app.use(express.static("./public"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(bodyParser.json());
+
 app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
     // console.log("Inside Post /upload");
     // If nothing went wrong the file is already in the uploads directory
@@ -45,7 +49,7 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
             req.body.title,
             req.body.description
         ).then(results => {
-            console.log("Upload Successful", results);
+            // console.log("Upload Successful", results);
             res.json({
                 id: results.id,
                 title: results.title,
@@ -76,9 +80,27 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
 app.get("/images", (req, res) => {
     getImages().then(images => {
         // console.log("Results from get images", images);
-        res.json({ images: images });
+        res.json({ images });
     });
 });
+
+app.get('/images/:id', function(req, res){
+    var id = req.params.id;
+    getImageById(id).then(image => {
+        console.log("Image from getImageById", image);
+        image.image = config.s3Url + image.image;
+        res.json({ image });
+    });
+});
+
+app.post("/comments", function (req, res) {
+    insertImageIntoDB(
+        req.body.username,
+        req.body.title,
+        req.body.description
+    ).then(() => {console.log("Insert Done!")} )
+});
+
 
 app.listen(8080, function() {
     console.log("Listening Image Board");

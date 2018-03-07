@@ -14,13 +14,26 @@ function getImages() {
     return db
         .query(q)
         .then(results => {
-            console.log(results.rows);
+            // console.log(results.rows);
             let images = results.rows;
             images.forEach(function(image) {
                 let url = config.s3Url + image.image;
                 image.image = url;
             });
             return images;
+        })
+        .catch(err => console.log(err));
+}
+
+
+function getImageById(id) {
+    const q = `SELECT * FROM images WHERE id = $1`;
+    const param = [id];
+
+    return db
+        .query(q, param)
+        .then(results => {
+            return results.rows[0];
         })
         .catch(err => console.log(err));
 }
@@ -42,5 +55,20 @@ function insertImageIntoDB(image, username, title, description) {
         .catch(err => console.log(err));
 }
 
+function insertComment(image_id, username, comment) {
+    const q = `INSERT INTO comments (image_id, username, comment) VALUES ($1, $2, $3) RETURNING *`;
+    const params = [image_id, username, comment];
+
+    return db
+        .query(q, params)
+        .then(results => {
+            console.log("A comment has been inserted", results);
+        })
+        .catch(err => console.log(err));
+}
+
+
 module.exports.getImages = getImages;
 module.exports.insertImageIntoDB = insertImageIntoDB;
+module.exports.getImageById = getImageById;
+module.exports.insertComment = insertComment;

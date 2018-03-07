@@ -15,7 +15,7 @@
     <div id="main">
         <form class="upload-form">
                 <input v-model="formInfo.title" name="title" placeholder="Title" type="text">
-                <input v-model="formInfo.description" name="description" placeholder="Description"type="text">
+                <input v-model="formInfo.description" name="description" placeholder="Description" type="text">
                 <input v-model="formInfo.username" name="username" placeholder="Username" type="text">
                 <input type="file" v-on:change="handleChange">
                 <button v-on:click="handleSubmit">Submit</button>
@@ -23,15 +23,66 @@
 
         <div class="image-board">
             <div v-for="image in images" class="image-item">
-                <img v-bind:src="image.image">
+                <img v-bind:src="image.image" v-on:click="selectedImage = image.id">
+
                 <span class="img-title">{{image.title}}</span>
             </div>
         </div>
+
+        <single-image v-if="selectedImage"
+                        v-bind:id="selectedImage"
+                        v-on:done="hideImage">
+        </single-image>
     </div>
 
+
+
+    <!-- TEMPLATE -->
+
+<script id="big-image" type="x-template">
+<div class="overlay">
+    <div class="main-modal">
+    <span class="exit" v-on:click="exit">X</span>
+        <div class="modal-image">
+            <img v-bind:src="image.image">
+            <div class="image-details">
+                <p class="details"><strong>Title: {{image.title}} ||
+                Description: {{image.description}} || Posted by:{{image.username}}</strong></p>
+            </div>
+        </div>
+            <div class="comment-form">
+                <p>Add a Comment!</p>
+                <form>
+                    <input
+                        v-model="commentInfo.username"
+                        name="username"
+                        placeholder="Username"
+                        type="text"
+                    />
+                    <input
+                        v-model="commentInfo.description"
+                        name="comment"
+                        placeholder="Your Comment"
+                        type="text" style="width: 200px;"
+                    />
+                    <button v-on:click="handleCommentSubmit">Submit</button>
+                </form>
+            </div>
+            <div class="comments-section">
+            </div>
+        </div>
+</div>
+</script>
 
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
     <script src="/js/script.js"></script>
 </body>
+
+<!-- add component here : -->
+<!-- CSS makes it sit on everything -->
+<!-- when it's clicked on, a new window appears -->
+<!-- pass the id of the image that a user clicked on to open it -->
+<!-- in the main Vue instance  selectedImage: null, when a user clicks on it, we set it to the id -->
+<!-- comments work the same way as images. as you get it, you unshift it into an array -->
 </html>

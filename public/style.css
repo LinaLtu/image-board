@@ -5,12 +5,15 @@
 
 #main {
     margin: 2%;
+    position: relative;
 }
 
 .image-board {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    width: 100%;
+    margin: auto;
 }
 
 .upload-form {
@@ -67,3 +70,67 @@ form {
     bottom: 1%;
     left: 10%;
 } */
+
+/* MODAL */
+
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    z-index: 2;
+    overflow-y: hidden;
+}
+
+.main-modal {
+    position: absolute;
+    top: 1%;
+    left: 5%;
+    width: 90%;
+    max-height: auto;
+    margin: 0 auto;
+    border: 1px solid black;
+    z-index: 3;
+    border-radius: 5px;
+}
+
+.modal-image {
+    border: 1px solid black;
+    margin: 0 auto;
+    margin-top: 2%;
+    max-width: 600px;
+    max-height: auto;
+    border-radius: 5px;
+    position: relative;
+}
+
+.modal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.comments-section {
+    width: 400px;
+    height: 200px;
+    border: 1px solid black;
+    margin: 5%;
+}
+
+.comment-form {
+    margin-left: 5%;
+    margin-top: 3%;
+}
+
+.exit {
+    float: right;
+    margin: 2%;
+}
+
+.details {
+    margin: 3%;
+}
