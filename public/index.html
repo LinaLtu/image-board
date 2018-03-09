@@ -23,7 +23,8 @@
 
         <div class="image-board">
             <div v-for="image in images" class="image-item">
-                <img v-bind:src="image.image" v-on:click="selectedImage = image.id">
+
+                <a v-bind:href="'#' + image.id"><img v-bind:src="image.image" v-on:click="selectedImage = image.id"></a>
 
                 <span class="img-title">{{image.title}}</span>
             </div>
@@ -41,37 +42,51 @@
 
 <script id="big-image" type="x-template">
 <div class="overlay">
-    <div class="main-modal">
-    <span class="exit" v-on:click="exit">X</span>
-        <div class="modal-image">
+   <div class="main-modal">
+      <span class="exit" v-on:click="exit">X</span>
+      <div class="modal-image">
+         <div v-if="image">
             <img v-bind:src="image.image">
             <div class="image-details">
-                <p class="details"><strong>Title: {{image.title}} ||
-                Description: {{image.description}} || Posted by:{{image.username}}</strong></p>
+               <p class="details"><strong>Title: {{image.title}} ||
+                  Description: {{image.description}} || Posted by:{{image.username}}</strong>
+               </p>
             </div>
-        </div>
-            <div class="comment-form">
-                <p>Add a Comment!</p>
-                <form>
-                    <input
-                        v-model="commentInfo.username"
-                        name="username"
-                        placeholder="Username"
-                        type="text"
-                    />
-                    <input
-                        v-model="commentInfo.description"
-                        name="comment"
-                        placeholder="Your Comment"
-                        type="text" style="width: 200px;"
-                    />
-                    <button v-on:click="handleCommentSubmit">Submit</button>
-                </form>
+    </div>
+
+         <div class="comment-form">
+            <p>Add a Comment!</p>
+            <form>
+               <input
+                  v-model="commentInfo.username"
+                  name="username"
+                  placeholder="Username"
+                  type="text"
+                  />
+               <input
+                  v-model="commentInfo.description"
+                  name="comment"
+                  placeholder="Your Comment"
+                  type="text" style="width: 200px;"
+                  />
+               <button v-on:click="handleCommentSubmit">Submit</button>
+            </form>
+         </div>
+         </div>
+         <div class="comment-secion" v-if="comments.length > 0">
+            <div v-for="comment in comments" class="comment-item-section">
+               {{comment.username}} said: "{{comment.comment}}"
             </div>
-            <div class="comments-section">
-            </div>
-        </div>
+         </div>
+         <div v-else class="comment-item-section">
+            <p>There are no comments yet. Be the first to comment!</p>
+         </div>
+      </div>
+           <div v-else><p>Image does not exist</p></div>
+   </div>
 </div>
+
+
 </script>
 
     <script src="/js/vue.js"></script>

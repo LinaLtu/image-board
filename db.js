@@ -9,7 +9,7 @@ var db = spicedPg(
 );
 
 function getImages() {
-    const q = `SELECT * FROM images ORDER BY created_at DESC`;
+    const q = `SELECT * FROM images ORDER BY created_at DESC LIMIT 12`;
 
     return db
         .query(q)
@@ -25,6 +25,9 @@ function getImages() {
         .catch(err => console.log(err));
 }
 
+// const q = `SELECT * FROM images WHERE  id < $1 ORDER BY id DESC   <-- to get the next page
+//if the id < 1, hide the "more" button
+//or do an infinite scroll - a more pleasant UE
 
 function getImageById(id) {
     const q = `SELECT * FROM images WHERE id = $1`;
@@ -55,20 +58,34 @@ function insertImageIntoDB(image, username, title, description) {
         .catch(err => console.log(err));
 }
 
-function insertComment(image_id, username, comment) {
+function insertComment(imageId, username, comment) {
     const q = `INSERT INTO comments (image_id, username, comment) VALUES ($1, $2, $3) RETURNING *`;
-    const params = [image_id, username, comment];
+    const params = [imageId, username, comment];
 
     return db
         .query(q, params)
-        .then(results => {
-            console.log("A comment has been inserted", results);
+        .then(comments => {
+            console.log("A comment has been inserted", comments);
         })
         .catch(err => console.log(err));
 }
 
+function getComments(imageId) {
+    const q = `SELECT * FROM comments WHERE image_id = $1`;
+    const param = [imageId];
+
+    return db
+        .query(q, param)
+        .then(results => {
+            // console.log(results.rows);
+            let comments = results.rows;
+            return comments;
+        })
+        .catch(err => console.log(err));
+}
 
 module.exports.getImages = getImages;
 module.exports.insertImageIntoDB = insertImageIntoDB;
 module.exports.getImageById = getImageById;
 module.exports.insertComment = insertComment;
+module.exports.getComments = getComments;

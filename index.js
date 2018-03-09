@@ -8,6 +8,7 @@ const config = require("./config");
 const getImages = db.getImages;
 const insertImageIntoDB = db.insertImageIntoDB;
 const getImageById = db.getImageById;
+const getComments = db.getComments;
 const insertComment = db.insertComment;
 const upload = s3.upload;
 
@@ -84,23 +85,32 @@ app.get("/images", (req, res) => {
     });
 });
 
-app.get('/images/:id', function(req, res){
+app.get("/images/:id", function(req, res) {
     var id = req.params.id;
     getImageById(id).then(image => {
-        console.log("Image from getImageById", image);
-        image.image = config.s3Url + image.image;
+        if (image) {
+            // console.log("Image from getImageById", image);
+            image.image = config.s3Url + image.image;
+        }
         res.json({ image });
     });
 });
 
-app.post("/comments", function (req, res) {
-    insertImageIntoDB(
-        req.body.username,
-        req.body.title,
-        req.body.description
-    ).then(() => {console.log("Insert Done!")} )
+app.post("/comments", function(req, res) {
+    console.log("Comment ", req.body.comments);
+    insertComment(req.body.image_id, req.body.username, req.body.comments).then(
+        results => {
+            res.json({ results });
+        }
+    );
 });
 
+app.get("/comments/:imageId", function(req, res) {
+    getComments(req.params.imageId).then(comments => {
+        // console.log("Results from get images", images);
+        res.json({ comments });
+    });
+});
 
 app.listen(8080, function() {
     console.log("Listening Image Board");

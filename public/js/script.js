@@ -8,6 +8,8 @@ Vue.component("single-image", {
                 username: "",
                 id: null
             },
+            error: false,
+            comment: "",
             comments: [],
             commentInfo: {},
             selectedImage: null
@@ -18,57 +20,67 @@ Vue.component("single-image", {
             this.$emit("done");
         },
         handleCommentSubmit: function(e) {
-            e.preventDefault();
+            // e.preventDefault();
+            let self = this;
             this.commentInfo.username;
             this.commentInfo.description;
-            console.log("Comment Info: ", this.commentInfo.username, this.commentInfo.description);
-            axios.post("/comments", {
-                comments: this.commentInfo.description,
-                username: this.commentInfo.username,
-                image_id : this.id
-            });
-            // console.log("This from handleCommentsSubmit", this);
-
-            // e.preventDefault();
-            // const formData = new FormData(); //this is how we send an image
-            // formData.append("title", this.formInfo.title);
-            // formData.append("description", this.formInfo.description);
-            // formData.append("username", this.formInfo.username);
-            // formData.append("file", this.formInfo.file);
-            //
-            // axios.post("/upload", formData).then(results => {
-            //     // console.log("Results from Axios", results);
-            //     this.formInfo.title = "";
-            //     this.formInfo.description = "";
-            //     this.formInfo.username = "";
-            //     this.formInfo.file = "";
-            //
-            //     // console.log(results.data.image);
-            //     this.images.unshift(results.data);
-            //
-            //     console.log("Images:", this.images);
-            //res.json back the info about the new image
-            //image data will be un results.data.images
-            //then unshift (add to the beginning of an array) the next image into this.images
-            // });
+            console.log(
+                "Comment Info: ",
+                this.commentInfo.username,
+                this.commentInfo.description
+            );
+            axios
+                .post("/comments", {
+                    comments: this.commentInfo.description,
+                    username: this.commentInfo.username,
+                    image_id: this.id
+                })
+                .then(function(resp) {
+                    console.log("From axios ", this.commentInfo.description);
+                    self.comments.unshift(resp.data.results);
+                });
         }
     },
     template: "#big-image",
-    mounted: function(){
+    mounted: function() {
+        if (isNaN(this.id)) {
+            console.log("Log from the if");
+            return;
+        }
+
         var self = this;
-        axios.get('/images/' + this.id).then(function(resp){
+        // console.log(self.id);
+        axios.get("/images/" + this.id).then(function(resp) {
+            if (!resp.data.image) {
+                self.error = true;
+            }
             self.image = resp.data.image;
             console.log(self);
         });
+        axios.get("/comments/" + this.id).then(function(resp) {
+            self.comments = resp.data.comments;
+        });
+    },
+    watch: {
+        id: function() {
+            console.log("Watch ", this.id);
+            if (isNaN(this.id)) {
+                return;
+            }
+            var self = this;
+            axios.get("/images/" + this.id).then(function(resp) {
+                self.image = resp.data.image;
+                console.log(self);
+            });
+        }
     }
 });
-
 
 new Vue({
     el: "#main", //where our app will load
     data: {
         images: [],
-        selectedImage: null,
+        selectedImage: location.hash.slice(1) || null,
         formInfo: {
             title: "",
             description: "",
@@ -79,7 +91,6 @@ new Vue({
     methods: {
         handleChange: function(e) {
             this.formInfo.file = e.target.files[0]; //???
-            // console.log("Handle change ran", this);
         },
         handleSubmit: function(e) {
             e.preventDefault();
@@ -96,18 +107,14 @@ new Vue({
                 this.formInfo.username = "";
                 this.formInfo.file = "";
 
-                // console.log(results.data.image);
                 this.images.unshift(results.data);
 
                 console.log("Images:", this.images);
-
-                //res.json back the info about the new image
-                //image data will be un results.data.images
-                //then unshift (add to the beginning of an array) the next image into this.images
             });
         },
-        hideImage: function(){
+        hideImage: function() {
             this.selectedImage = null;
+            location.hash = "";
         }
     },
     mounted: function() {
@@ -116,9 +123,10 @@ new Vue({
         axios.get("/images").then(function(results) {
             app.images = results.data.images;
         });
+        window.addEventListener("hashchange", function() {
+            console.log(app.selectedImage);
+            app.selectedImage = location.hash.slice(1);
+            console.log("Hash changed ", location.hash.slice(1));
+        });
     }
 });
-
-// axios.post('/comment', {
-//     username:
-// })
