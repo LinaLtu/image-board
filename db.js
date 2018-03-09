@@ -71,7 +71,7 @@ function insertComment(imageId, username, comment) {
 }
 
 function getComments(imageId) {
-    const q = `SELECT * FROM comments WHERE image_id = $1`;
+    const q = `SELECT * FROM comments WHERE image_id = $1  ORDER BY created_at DESC`;
     const param = [imageId];
 
     return db

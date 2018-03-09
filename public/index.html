@@ -45,14 +45,13 @@
    <div class="main-modal">
       <span class="exit" v-on:click="exit">X</span>
       <div class="modal-image">
-         <div v-if="image">
-            <img v-bind:src="image.image">
-            <div class="image-details">
-               <p class="details"><strong>Title: {{image.title}} ||
-                  Description: {{image.description}} || Posted by:{{image.username}}</strong>
-               </p>
-            </div>
-    </div>
+                <img v-bind:src="image.image">
+                <div class="image-details">
+                    <p class="details"><strong>Title: {{image.title}} ||
+                      Description: {{image.description}} || Posted by:{{image.username}}</strong>
+                    </p>
+                </div>
+        </div>
 
          <div class="comment-form">
             <p>Add a Comment!</p>
@@ -72,7 +71,6 @@
                <button v-on:click="handleCommentSubmit">Submit</button>
             </form>
          </div>
-         </div>
          <div class="comment-secion" v-if="comments.length > 0">
             <div v-for="comment in comments" class="comment-item-section">
                {{comment.username}} said: "{{comment.comment}}"
@@ -82,7 +80,6 @@
             <p>There are no comments yet. Be the first to comment!</p>
          </div>
       </div>
-           <div v-else><p>Image does not exist</p></div>
    </div>
 </div>
 

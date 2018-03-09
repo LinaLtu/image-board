@@ -91,8 +91,13 @@ app.get("/images/:id", function(req, res) {
         if (image) {
             // console.log("Image from getImageById", image);
             image.image = config.s3Url + image.image;
+            res.json({
+                image,
+                success: true
+            });
+        } else {
+            res.json({ success: false });
         }
-        res.json({ image });
     });
 });
 
@@ -106,8 +111,9 @@ app.post("/comments", function(req, res) {
 });
 
 app.get("/comments/:imageId", function(req, res) {
+    console.log("Results from get images", req.params.imageId);
     getComments(req.params.imageId).then(comments => {
-        // console.log("Results from get images", images);
+        console.log("Results from get images", comments);
         res.json({ comments });
     });
 });

@@ -29,6 +29,7 @@ Vue.component("single-image", {
                 this.commentInfo.username,
                 this.commentInfo.description
             );
+            console.log("From axios ", this.id);
             axios
                 .post("/comments", {
                     comments: this.commentInfo.description,
@@ -43,34 +44,48 @@ Vue.component("single-image", {
     },
     template: "#big-image",
     mounted: function() {
+        // console.log("Mounted ran");
         if (isNaN(this.id)) {
             console.log("Log from the if");
             return;
         }
-
+        console.log(this);
         var self = this;
         // console.log(self.id);
         axios.get("/images/" + this.id).then(function(resp) {
             if (!resp.data.image) {
                 self.error = true;
             }
-            self.image = resp.data.image;
-            console.log(self);
-        });
-        axios.get("/comments/" + this.id).then(function(resp) {
-            self.comments = resp.data.comments;
+            if (!resp.data.success) {
+                self.$emit("done");
+            } else {
+                self.image = resp.data.image;
+                console.log(self);
+            }
+
+            axios.get("/comments/" + self.id).then(function(resp) {
+                console.log(resp);
+                self.comments = resp.data.comments;
+            });
         });
     },
     watch: {
         id: function() {
-            console.log("Watch ", this.id);
+            // console.log("Watch ", this);
             if (isNaN(this.id)) {
                 return;
             }
             var self = this;
             axios.get("/images/" + this.id).then(function(resp) {
-                self.image = resp.data.image;
-                console.log(self);
+                if (!resp.data.success) {
+                    self.$emit("done");
+                } else {
+                    self.image = resp.data.image;
+                    console.log(self);
+                    axios.get("/comments/" + self.id).then(function(resp) {
+                        self.comments = resp.data.comments;
+                    });
+                }
             });
         }
     }
@@ -124,9 +139,14 @@ new Vue({
             app.images = results.data.images;
         });
         window.addEventListener("hashchange", function() {
-            console.log(app.selectedImage);
-            app.selectedImage = location.hash.slice(1);
-            console.log("Hash changed ", location.hash.slice(1));
+            // console.log(typeof parseInt(location.hash.slice(1)));
+            if (!(parseInt(location.hash.slice(1)) == location.hash.slice(1))) {
+                console.log("We are heeeeeere");
+                location.hash = "";
+                app.selectedImage = null;
+            } else {
+                app.selectedImage = location.hash.slice(1);
+            }
         });
     }
 });
