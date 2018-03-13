@@ -4,6 +4,7 @@ const db = require("./db.js");
 const s3 = require("./s3.js");
 const bodyParser = require("body-parser");
 const config = require("./config");
+const InfiniteLoading = require("vue-infinite-loading");
 
 const getImages = db.getImages;
 const insertImageIntoDB = db.insertImageIntoDB;
@@ -78,8 +79,8 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
     }
 });
 
-app.get("/images", (req, res) => {
-    getImages().then(images => {
+app.get("/imagesList/:offset", (req, res) => {
+    getImages(req.params.offset).then(images => {
         // console.log("Results from get images", images);
         res.json({ images });
     });

@@ -46,7 +46,7 @@ Vue.component("single-image", {
     mounted: function() {
         // console.log("Mounted ran");
         if (isNaN(this.id)) {
-            console.log("Log from the if");
+            // console.log("Log from the if");
             return;
         }
         console.log(this);
@@ -107,6 +107,60 @@ new Vue({
         handleChange: function(e) {
             this.formInfo.file = e.target.files[0]; //???
         },
+
+        handleScroll: function(e) {
+            // $(window).scroll(function() {
+            //     if (
+            //         $(window).scrollTop() + $(window).height() ==
+            //         $(document).height()
+            //     ) {
+            //         alert("bottom!");
+            //     }
+            // });
+
+            //if it's not scrolled to the bottom, then {return}
+
+            console.log("Running scroll"); //running as soon as the page uploads
+            //scrollTop -> run handleScroll
+            //get the correct number of images being displayed (this.images.length = offset)
+            //then use the offset number
+            var body = document.body,
+                html = document.documentElement;
+
+            var documentHeight = Math.max(
+                body.scrollHeight,
+                body.offsetHeight,
+                html.clientHeight,
+                html.scrollHeight,
+                html.offsetHeight
+            );
+
+            var scrollBottom = html.clientHeight + window.scrollY;
+
+            console.log(scrollBottom);
+
+            //This is where we have problems - we should not make another request if the current one is still running
+            if (documentHeight == scrollBottom) {
+                alert("Bottom!!");
+
+                console.log(this.images.length);
+                // var offset = window.offset + 6;
+                var app = this;
+
+                //This event listener gets removed and we do not check if scroll occurs again
+                window.removeEventListener("scroll", this.handleScroll);
+
+                axios.get("/imagesList/" + offset).then(function(results) {
+                    window.requestOpen = true;
+
+                    var newData = app.images.concat(results.data.images);
+                    app.images = newData;
+                    var resultsLength = results.data.images.length;
+
+                    console.log("Total results: ", results);
+                });
+            }
+        },
         handleSubmit: function(e) {
             e.preventDefault();
             const formData = new FormData(); //this is how we send an image
@@ -135,9 +189,12 @@ new Vue({
     mounted: function() {
         //mounted is always a function (life-cycle method - it runs when it loads)
         var app = this;
-        axios.get("/images").then(function(results) {
+        window.offset = 0;
+
+        axios.get("/imagesList/0").then(function(results) {
             app.images = results.data.images;
         });
+
         window.addEventListener("hashchange", function() {
             // console.log(typeof parseInt(location.hash.slice(1)));
             if (!(parseInt(location.hash.slice(1)) == location.hash.slice(1))) {
@@ -148,5 +205,11 @@ new Vue({
                 app.selectedImage = location.hash.slice(1);
             }
         });
+    },
+    created: function() {
+        window.addEventListener("scroll", this.handleScroll);
+    },
+    destroyed: function() {
+        window.removeEventListener("scroll", this.handleScroll);
     }
 });

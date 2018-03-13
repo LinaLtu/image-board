@@ -56,6 +56,10 @@ form {
     object-fit: cover;
 }
 
+.image-item:hover {
+    opacity: 0.6;
+}
+
 .image-item {
     margin: 1%;
     border: 2px solid black;
@@ -147,4 +151,20 @@ form {
 
 .details {
     margin: 3%;
+}
+
+@media only screen and (max-width: 1359px) {
+    .image-item {
+        width: 47%;
+        max-width: 47%;
+        margin-bottom: 20px;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    .image-item {
+        width: 97%;
+        max-width: 97%;
+        margin-bottom: 30px;
+    }
 }

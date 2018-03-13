@@ -8,9 +8,11 @@ var db = spicedPg(
         `postgres:postgres:postgres@localhost:5432/images`
 );
 
-function getImages() {
-    const q = `SELECT * FROM images ORDER BY created_at DESC LIMIT 12`;
-
+function getImages(offset) {
+    const q =
+        `SELECT * FROM images ORDER BY created_at DESC LIMIT 6 OFFSET ` +
+        offset;
+    console.log(q);
     return db
         .query(q)
         .then(results => {
