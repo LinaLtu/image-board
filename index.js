@@ -1,10 +1,10 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const db = require("./db.js");
-const s3 = require("./s3.js");
-const bodyParser = require("body-parser");
-const config = require("./config");
-const InfiniteLoading = require("vue-infinite-loading");
+const db = require('./db.js');
+const s3 = require('./s3.js');
+const bodyParser = require('body-parser');
+const config = require('./config');
+const InfiniteLoading = require('vue-infinite-loading');
 
 const getImages = db.getImages;
 const insertImageIntoDB = db.insertImageIntoDB;
@@ -13,13 +13,13 @@ const getComments = db.getComments;
 const insertComment = db.insertComment;
 const upload = s3.upload;
 
-var multer = require("multer");
-var uidSafe = require("uid-safe");
-var path = require("path");
+var multer = require('multer');
+var uidSafe = require('uid-safe');
+var path = require('path');
 
 var diskStorage = multer.diskStorage({
     destination: function(req, file, callback) {
-        callback(null, __dirname + "/uploads");
+        callback(null, __dirname + '/uploads');
     },
     filename: function(req, file, callback) {
         uidSafe(24).then(function(uid) {
@@ -35,15 +35,13 @@ var uploader = multer({
     }
 });
 
-app.use(express.static("./public"));
+app.use(express.static('./public'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
-app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
-    // console.log("Inside Post /upload");
-    // If nothing went wrong the file is already in the uploads directory
+app.post('/upload', uploader.single('file'), s3.upload, function(req, res) {
     if (req.file) {
         insertImageIntoDB(
             req.file.filename,
@@ -51,7 +49,6 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
             req.body.title,
             req.body.description
         ).then(results => {
-            // console.log("Upload Successful", results);
             res.json({
                 id: results.id,
                 title: results.title,
@@ -61,16 +58,6 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
                 image: results.image
             });
         });
-
-        // res.json({
-        //     title: results.data.title,
-        //     description: results.data.description,
-        //     username: results.data.username
-        // });
-
-        //db.query - insert in title, description, username (req.body.) the file is not in req.body, however(req.file.filename)
-        //return data of the images
-        //then, res.json back the data of the new image
     } else {
         console.log("Upload didin't work");
         res.json({
@@ -79,18 +66,16 @@ app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
     }
 });
 
-app.get("/imagesList/:offset", (req, res) => {
+app.get('/imagesList/:offset', (req, res) => {
     getImages(req.params.offset).then(images => {
-        // console.log("Results from get images", images);
         res.json({ images });
     });
 });
 
-app.get("/images/:id", function(req, res) {
+app.get('/images/:id', function(req, res) {
     var id = req.params.id;
     getImageById(id).then(image => {
         if (image) {
-            // console.log("Image from getImageById", image);
             image.image = config.s3Url + image.image;
             res.json({
                 image,
@@ -102,8 +87,7 @@ app.get("/images/:id", function(req, res) {
     });
 });
 
-app.post("/comments", function(req, res) {
-    console.log("Comment ", req.body.comments);
+app.post('/comments', function(req, res) {
     insertComment(req.body.image_id, req.body.username, req.body.comments).then(
         results => {
             res.json({ results });
@@ -111,14 +95,12 @@ app.post("/comments", function(req, res) {
     );
 });
 
-app.get("/comments/:imageId", function(req, res) {
-    console.log("Results from get images", req.params.imageId);
+app.get('/comments/:imageId', function(req, res) {
     getComments(req.params.imageId).then(comments => {
-        console.log("Results from get images", comments);
         res.json({ comments });
     });
 });
 
 app.listen(8080, function() {
-    console.log("Listening Image Board");
+    console.log('Listening Image Board');
 });

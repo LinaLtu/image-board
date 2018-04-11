@@ -1,7 +1,5 @@
-const spicedPg = require("spiced-pg");
-const config = require("./config");
-
-// var { dbUser, dbPass } = require("../secrets.json");
+const spicedPg = require('spiced-pg');
+const config = require('./config');
 
 var db = spicedPg(
     process.env.DATABASE_URL ||
@@ -12,11 +10,10 @@ function getImages(offset) {
     const q =
         `SELECT * FROM images ORDER BY created_at DESC LIMIT 6 OFFSET ` +
         offset;
-    console.log(q);
+
     return db
         .query(q)
         .then(results => {
-            // console.log(results.rows);
             let images = results.rows;
             images.forEach(function(image) {
                 let url = config.s3Url + image.image;
@@ -26,10 +23,6 @@ function getImages(offset) {
         })
         .catch(err => console.log(err));
 }
-
-// const q = `SELECT * FROM images WHERE  id < $1 ORDER BY id DESC   <-- to get the next page
-//if the id < 1, hide the "more" button
-//or do an infinite scroll - a more pleasant UE
 
 function getImageById(id) {
     const q = `SELECT * FROM images WHERE id = $1`;
@@ -67,7 +60,7 @@ function insertComment(imageId, username, comment) {
     return db
         .query(q, params)
         .then(comments => {
-            console.log("A comment has been inserted", comments);
+            console.log('A comment has been inserted', comments);
         })
         .catch(err => console.log(err));
 }
@@ -79,7 +72,6 @@ function getComments(imageId) {
     return db
         .query(q, param)
         .then(results => {
-            // console.log(results.rows);
             let comments = results.rows;
             return comments;
         })

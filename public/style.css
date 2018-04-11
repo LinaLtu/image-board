@@ -1,6 +1,6 @@
 body {
     background-color: #f6f6f6;
-    font-family: "Cinzel", serif;
+    font-family: 'Cinzel', serif;
 }
 
 #main {
@@ -66,19 +66,11 @@ form {
     max-width: 400px;
     height: 350px;
     border-radius: 5px;
-    /* position: relative; */
 }
 
 . img-title {
     padding: 6px;
 }
-
-/*
-.img-title {
-    position: absolute;
-    bottom: 1%;
-    left: 10%;
-} */
 
 /* MODAL */
 
@@ -90,7 +82,7 @@ form {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
     overflow-y: hidden;
 }
