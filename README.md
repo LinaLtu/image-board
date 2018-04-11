@@ -4,7 +4,7 @@
 
 On the 8th week of Full Stack JavaScript Web Development coding bootcamp at SPICED, I build a single page, responsive image board, where users can upload, view and comment on images.
 
-![imageboardscreenshot](/Users/lina/Desktop/horseradish-imageboard/imageboardscreenshot.jpg)
+![imageboardscreenshot](https://github.com/spicedacademy/horseradish-imageboard/blob/lina/imageboardscreenshot.jpg)
 
 ### Users can:
 
@@ -12,7 +12,7 @@ On the 8th week of Full Stack JavaScript Web Development coding bootcamp at SPIC
 
 - Open a modal with a bigger image, where they can leave a comment
 
-  ![imageboarddemo](/Users/lina/Desktop/horseradish-imageboard/imageboarddemo.gif)
+  ![imageboarddemo](https://github.com/spicedacademy/horseradish-imageboard/blob/lina/imageboarddemo.gif)
 
 ### Technologies used:
 
